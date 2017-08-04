@@ -17,12 +17,7 @@ public:
     vector<vector<vector<GLint> > > faces; //guarda as faces
 
 
-
-    CarregarArquivo()
-    {
-
-
-    }
+    CarregarArquivo(){}
 
     void Carregar(char in[])
     {
@@ -293,36 +288,13 @@ public:
                                     vertice_resto = aux4;
 
                                 }
-
-
-
-
                             }
-
                             faces.push_back(face);
-
-
-
-
-
-
                         }
-
                     }
-
-
                 }
-
-
-
-
             }
-
-
             arquivo.get(lido);
-
         }
-
-
     }
 };
