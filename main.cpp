@@ -18,29 +18,6 @@ float g = 1.0;
 float b = 1.0;
 
 
-class Movimento
-{
-public:
-    float tx,ty,tz,rodar_x,rodar_y,rodar_z;
-    Movimento()
-    {
-        tx = ty = tz = rodar_x = rodar_y = rodar_z = 0.0;
-
-    }
-    void set_movimento(float tx1,float ty1,float tz1,float rodar_x1,float rodar_y1,float rodar_z1)
-    {
-        tx = tx1;
-        ty = ty1;
-        tz = tz1;
-        rodar_x = rodar_x1;
-        rodar_y = rodar_y1;
-        rodar_z = rodar_z1;
-
-    }
-};
-
-Movimento carro;
-
 void DefineIluminacao (void)
 {
 
@@ -65,7 +42,7 @@ void DefineIluminacao (void)
     glEnable(GL_LIGHT0);
 }
 
-void DesenhaParque(void){
+void DesenhaTanque(void){
         // Troca cor corrente para azul
     glColor3f(1.0f, 0.0f, 0.0f);
     //DefineIluminacao();
@@ -79,13 +56,10 @@ void DesenhaParque(void){
 
         for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
         {
-
             GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
             GLfloat norm[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
             glNormal3fv ( norm );
             glVertex3fv ( vert );
-
-
         }
 
         glEnd( );
@@ -104,7 +78,7 @@ void Desenha(void)
     // Desenha um aviao
 
     if(figura == 0){
-        DesenhaParque();
+        DesenhaTanque();
     }
     if(figura == 1){
         glutSolidTeapot(10.0);
@@ -269,18 +243,6 @@ void Timer(int value)
 void Teclado(unsigned char key, int x, int y)
 {
 
-    if(key == 'w')
-    {
-        carro.tx = carro.tx + 0.5;
-        //glutTimerFunc(200,Timer,Perna.num_quadros);
-
-    }
-    if(key == 's')
-    {
-        carro.tx = carro.tx - 0.5;
-        //glutTimerFunc(200,Timer,Perna.num_quadros);
-
-    }
     if(key == ',')
     {
         glShadeModel(GL_SMOOTH);
