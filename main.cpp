@@ -9,8 +9,7 @@ void EspecificaParametrosVisualizacao(void);
 
 GLfloat angle, fAspect, rotX, rotY;
 GLdouble obsX, obsY, obsZ;
-CarregarArquivo Carro;
-CarregarArquivo Pista;
+CarregarArquivo Tanque;
 
 int figura = 0;
 
@@ -73,16 +72,16 @@ void DesenhaParque(void){
 
     glScalef( 10.0, 10.0, 10.0);
 
-    for ( int j = 0; j < (Carro.faces).size(); ++j )
+    for ( int j = 0; j < (Tanque.faces).size(); ++j )
     {
 
         glBegin ( GL_POLYGON );
 
-        for (int i = 0; i < (Carro.faces[j]).size() ; ++i )
+        for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
         {
 
-            GLfloat vert[3] = {(Carro.vertices1[Carro.faces[j][i][0]][0]),(Carro.vertices1[Carro.faces[j][i][0]][1]),(Carro.vertices1[Carro.faces[j][i][0]][2])};
-            GLfloat norm[3] = {(Carro.normais[Carro.faces[j][i][2]][0]),(Carro.normais[Carro.faces[j][i][2]][1]),(Carro.normais[Carro.faces[j][i][2]][2])};
+            GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
+            GLfloat norm[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
             glNormal3fv ( norm );
             glVertex3fv ( vert );
 
@@ -92,26 +91,6 @@ void DesenhaParque(void){
         glEnd( );
     }
 
-    glColor3f(0.0f, 0.0f, 0.0f);
-
-    for ( int j = 0; j < (Pista.faces).size(); ++j )
-    {
-
-        glBegin ( GL_POLYGON );
-
-        for (int i = 0; i < (Pista.faces[j]).size() ; ++i )
-        {
-
-            GLfloat vert[3] = {(Pista.vertices1[Pista.faces[j][i][0]][0]),(Pista.vertices1[Pista.faces[j][i][0]][1]),(Pista.vertices1[Pista.faces[j][i][0]][2])};
-            GLfloat norm[3] = {(Pista.normais[Pista.faces[j][i][2]][0]),(Pista.normais[Pista.faces[j][i][2]][1]),(Pista.normais[Pista.faces[j][i][2]][2])};
-            glNormal3fv ( norm );
-            glVertex3fv ( vert );
-
-
-        }
-
-        glEnd( );
-    }
 }
 
 // Função callback chamada para fazer o desenho
@@ -142,9 +121,7 @@ void Desenha(void)
 // Inicialização
 void Inicializa(void)
 {
-    Carro.Carregar("carro.obj");//carrega o arquivo
-    Pista.Carregar("pista.obj");
-
+    Tanque.Carregar("tanque.obj");//carrega o arquivo
 
     // Define a cor de fundo da janela de visualização como branca
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);

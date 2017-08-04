@@ -1,0 +1,42 @@
+# depslib dependency file v1.0
+1501822792 source:c:\users\arthu\documents\github\cg-tanque-game\carregararquivo.cpp
+	<stdlib.h>
+	<iostream>
+	<fstream>
+	<GL/gl.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<vector>
+	<string>
+
+1501790414 c:\users\arthu\documents\github\cg-tanque-game\include\gl\glut.h
+	"freeglut.h"
+
+1501790414 c:\users\arthu\documents\github\cg-tanque-game\include\gl\freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1501790414 c:\users\arthu\documents\github\cg-tanque-game\include\gl\freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1501790414 c:\users\arthu\documents\github\cg-tanque-game\include\gl\freeglut_ext.h
+
+1501824368 source:c:\users\arthu\documents\github\cg-tanque-game\main.cpp
+	<GL/gl.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+	"CarregarArquivo.cpp"
+
+1501822792 c:\users\arthu\documents\github\cg-tanque-game\carregararquivo.cpp
+	<stdlib.h>
+	<iostream>
+	<fstream>
+	<GL/gl.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<vector>
+	<string>
+
