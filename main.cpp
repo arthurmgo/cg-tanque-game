@@ -123,6 +123,10 @@ void Inicializa(void)
     rotX = 0;
     rotY = 0;
 
+    obsX = 0.0;
+    obsY = 0.0;
+    obsZ = 180.0;
+
     EspecificaParametrosVisualizacao();
 
     DefineIluminacao();
@@ -141,7 +145,7 @@ void PosicionaObservador(void)
     glLoadIdentity();
    // DefineIluminacao();
 
-    gluLookAt(0,0,180,0,0,0,0,1,0);
+    gluLookAt(obsX,obsY,obsZ,0,0,0,0,1,0);
     // Especifica posição do observador e do alvo
     glRotatef(rotX,1,0,0);
     glRotatef(rotY,0,1,0);
