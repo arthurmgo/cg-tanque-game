@@ -17,6 +17,10 @@ float r = 1.0;
 float g = 1.0;
 float b = 1.0;
 
+GLubyte lado[2048][2048][3];
+
+GLuint textura_id, textura_id2, textura_id3;
+
 
 void DefineIluminacao (void)
 {
@@ -42,30 +46,30 @@ void DefineIluminacao (void)
     glEnable(GL_LIGHT0);
 }
 
-void DesenhaTanque(void){
-        // Troca cor corrente para azul
-    glColor3f(1.0f, 0.0f, 0.0f);
-    //DefineIluminacao();
-
-    glScalef( 10.0, 10.0, 10.0);
-
-    for ( int j = 0; j < (Tanque.faces).size(); ++j )
-    {
-
-        glBegin ( GL_POLYGON );
-
-        for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
-        {
-            GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
-            GLfloat norm[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
-            glNormal3fv ( norm );
-            glVertex3fv ( vert );
-        }
-
-        glEnd( );
-    }
-
-}
+//void DesenhaTanque(void){
+//        // Troca cor corrente para azul
+//    glColor3f(1.0f, 0.0f, 0.0f);
+//    //DefineIluminacao();
+//
+//    glScalef( 50.0, 10.0, 10.0);
+//
+//    for ( int j = 0; j < (Tanque.faces).size(); ++j )
+//    {
+//
+//        glBegin ( GL_POLYGON );
+//
+//        for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
+//        {
+//            GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
+//            GLfloat norm[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
+//            glNormal3fv ( norm );
+//            glVertex3fv ( vert );
+//        }
+//
+//        glEnd( );
+//    }
+//
+//}
 
 // Função callback chamada para fazer o desenho
 void Desenha(void)
@@ -77,18 +81,127 @@ void Desenha(void)
     glPushMatrix();
     // Desenha um aviao
 
-    if(figura == 0){
-        DesenhaTanque();
-    }
-    if(figura == 1){
-        glutSolidTeapot(10.0);
-    }
+    // Limpa a janela de visualização com a cor
+    // de fundo definida previamente
+    EspecificaParametrosVisualizacao();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    DefineIluminacao();
+    // Troca cor corrente para azul
+    glColor3f(0.0f, 0.0f, 1.0f);
 
+    glPushMatrix();
+
+    glScaled(3.0,1.0,3.0);
+    glEnable(GL_TEXTURE_2D);
+
+    glBindTexture(GL_TEXTURE_2D, textura_id2);
+    // Desenha um cubo
+    glBegin(GL_POLYGON); // Face posterior
+    glNormal3f(0,0,1); // Normal da face
+    glTexCoord2f(1.0/2 , 2.0/3);
+    glVertex3f(50.0, 50.0, 50.0);
+    glTexCoord2f(1.0/4 , 2.0/3);
+    glVertex3f(-50.0, 50.0, 50.0);
+    glTexCoord2f(1.0/4 , 1.0/3);
+    glVertex3f(-50.0, -50.0, 50.0);
+    glTexCoord2f(1.0/2 , 1.0/3);
+    glVertex3f(50.0, -50.0, 50.0);
+    glEnd();
+
+    glBegin(GL_POLYGON); // Face frontal
+    glNormal3f(0,0,-1); // Normal da face
+    glTexCoord2f(3.0/4 , 2.0/3);
+    glVertex3f(50.0, 50.0, -50.0);
+    glTexCoord2f(3.0/4 , 1.0/3);
+    glVertex3f(50.0, -50.0, -50.0);
+    glTexCoord2f(1.0 , 1.0/3);
+    glVertex3f(-50.0, -50.0, -50.0);
+    glTexCoord2f(1.0 , 2.0/3);
+
+    glVertex3f(-50.0, 50.0, -50.0);
+    glEnd();
+
+    glBegin(GL_POLYGON);// Face lateral esquerda
+    glNormal3f(-1,0,0); // Normal da face
+    glTexCoord2f(1.0/4 , 2.0/3);
+    glVertex3f(-50.0, 50.0, 50.0);
+    glTexCoord2f(0 , 2.0/3);
+    glVertex3f(-50.0, 50.0, -50.0);
+    glTexCoord2f(0 , 1.0/3);
+    glVertex3f(-50.0, -50.0, -50.0);
+    glTexCoord2f(1.0/4 , 1.0/3);
+    glVertex3f(-50.0, -50.0, 50.0);
+    glEnd();
+
+    glBegin(GL_POLYGON); // Face lateral direita
+    glNormal3f(1,0,0); // Normal da face
+    glTexCoord2f(1.0/2 , 2.0/3);
+    glVertex3f(50.0, 50.0, 50.0);
+    glTexCoord2f(1.0/2 , 1.0/3);
+    glVertex3f(50.0, -50.0, 50.0);
+    glTexCoord2f(3.0/4 , 1.0/3);
+    glVertex3f(50.0, -50.0, -50.0);
+    glTexCoord2f(3.0/4 , 2.0/3);
+    glVertex3f(50.0, 50.0, -50.0);
+    glEnd();
+
+    //glDisable(GL_TEXTURE_2D);
+
+    glBegin(GL_POLYGON); // Face superior
+    glNormal3f(0,1,0); // Normal da face
+    glTexCoord2f(1.0/4 , 1.0);
+    glVertex3f(-50.0, 50.0, -50.0);
+    glTexCoord2f(1.0/4 , 2.0/3);
+    glVertex3f(-50.0, 50.0, 50.0);
+    glTexCoord2f(1.0/2 , 2.0/3);
+    glVertex3f(50.0, 50.0, 50.0);
+    glTexCoord2f(1.0/2 , 1.0);
+    glVertex3f(50.0, 50.0, -50.0);
+    glEnd();
+
+    glBegin(GL_POLYGON); // Face inferior
+    glNormal3f(0,-1,0); // Normal da face
+    glTexCoord2f(1.0/4 ,0);
+    glVertex3f(-50.0, -50.0, -50.0);
+    glTexCoord2f(1.0/2 , 0);
+    glVertex3f(50.0, -50.0, -50.0);
+    glTexCoord2f(1.0/2 , 1.0/3);
+    glVertex3f(50.0, -50.0, 50.0);
+    glTexCoord2f(1.0/4 , 1.0/3);
+    glVertex3f(-50.0, -50.0, 50.0);
+    glEnd();
     glPopMatrix();
+    // Execução dos comandos de desenho
 
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glScalef( 20.0, 20.0, 20.0);
+
+    for ( int j = 0; j < (Tanque.faces).size(); ++j )
+        {
+
+            glBegin ( GL_POLYGON );
+
+            for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
+            {
+
+
+                GLfloat normal[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
+                glNormal3fv(normal);
+
+                GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
+                glVertex3fv ( vert );
+
+
+            }
+
+            glEnd( );
+        }
 
     // Execução dos comandos de desenho
+
     glutSwapBuffers();
+
 }
 
 
@@ -126,10 +239,54 @@ void Inicializa(void)
     obsX = 0.0;
     obsY = 0.0;
     obsZ = 180.0;
+    try
+    {
+        ifstream arq2("sky.bmp" ,ios::binary);
+        char c;
+        if(!arq2)
+            cout << "Erro abriu";
 
-    EspecificaParametrosVisualizacao();
+        for(int i = 0; i < 54 ; i++)
+            c = arq2.get();
+        for(int i = 0; i < 2048 ; i++)
+            for(int j = 0; j < 2048 ; j++)
+            {
+                c = arq2.get();
+                lado[i][j][2] = c;
+                c =  arq2.get();
+                lado[i][j][1] = c ;
+                c =  arq2.get();
+                lado[i][j][0] = c;
+            }
 
-    DefineIluminacao();
+        arq2.close();
+        arq2.clear();
+
+
+
+    }
+    catch(...)
+    {
+        cout << "Erro ao ler imagem" << endl;
+    }
+
+    // lado
+    glGenTextures(1,&textura_id2);
+
+    // Associa a textura aos comandos seguintes
+    glBindTexture(GL_TEXTURE_2D, textura_id2);
+
+    // Envia a textura para uso pela OpenGL
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,2048, 2048, 0, GL_RGB,GL_UNSIGNED_BYTE, lado);
+
+    // Define os filtros de magnificação e minificação
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+
+    // Seleciona o modo de aplicação da textura
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
 }
 
 
