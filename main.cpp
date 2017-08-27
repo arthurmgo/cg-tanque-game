@@ -1,34 +1,60 @@
-#include <GL/gl.h>
+// TeaPot3D.cpp - Isabel H. Manssour
+// Um programa OpenGL que exemplifica a visualização
+// de objetos 3D.
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <fstream>
 #include "CarregarArquivo.cpp"
 
-void PosicionaObservador(void);
+
+
+CarregarArquivo corpo_tanque;
+CarregarArquivo rodaTras_tanque;
+CarregarArquivo rodadireita_tanque;
+CarregarArquivo rodaesquerda_tanque;
+CarregarArquivo basecanhao_tanque;
+CarregarArquivo canhao_tanque;
+GLint especMaterial;
+
+using namespace std;
 void EspecificaParametrosVisualizacao(void);
 
-GLfloat angle, fAspect, rotX, rotY;
-GLdouble obsX, obsY, obsZ;
-CarregarArquivo Tanque;
-
-int figura = 0;
-
-float r = 1.0;
-float g = 1.0;
-float b = 1.0;
 
 GLubyte lado[2048][2048][3];
 
+char repete = 0;
+
+float movX = 0, movZ = 0;
+int rodar = 0;
+
+// Desativa interpolação linear da textura
+GLint filtro = GL_NEAREST;
+
+// Define valor final da coordenada de textura
+float final = 1.0;
+
+// Armazena identificação da textura
 GLuint textura_id, textura_id2, textura_id3;
+
+
+GLfloat angle, fAspect, rotX, rotY, transx, transy, transz, giraRoda, rotacao;
+GLdouble obsX, obsY, obsZ;
 
 
 void DefineIluminacao (void)
 {
-
     GLfloat luzAmbiente[4]= {0.2,0.2,0.2,1.0};
     GLfloat luzDifusa[4]= {0.7,0.7,0.7,1.0}; // "cor"
-    GLfloat luzEspecular[4]= {r, g, b, 1.0}; // "brilho"
-    GLfloat posicaoLuz[4]= {0.0, 150.0, 150.0, 1.0};
+    GLfloat luzEspecular[4]= {1.0, 1.0, 1.0, 1.0}; // "brilho"
+    GLfloat posicaoLuz[4]= {0.0, 50.0, 50.0, 1.0};
 // Capacidade de brilho do material
     GLfloat especularidade[4]= {1.0,1.0,1.0,1.0};
     GLint especMaterial = 60;
@@ -43,44 +69,227 @@ void DefineIluminacao (void)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
     glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular );
     glLightfv(GL_LIGHT0, GL_POSITION, posicaoLuz );
-    glEnable(GL_LIGHT0);
 }
 
-//void DesenhaTanque(void){
-//        // Troca cor corrente para azul
-//    glColor3f(1.0f, 0.0f, 0.0f);
-//    //DefineIluminacao();
-//
-//    glScalef( 50.0, 10.0, 10.0);
-//
-//    for ( int j = 0; j < (Tanque.faces).size(); ++j )
-//    {
-//
-//        glBegin ( GL_POLYGON );
-//
-//        for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
-//        {
-//            GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
-//            GLfloat norm[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
-//            glNormal3fv ( norm );
-//            glVertex3fv ( vert );
-//        }
-//
-//        glEnd( );
-//    }
-//
-//}
+void CarregaCorpo()
+{
+    glPushMatrix();
+    glScaled(2, 2, 2);
+    glRotated(180, 0, 1, 0);
+    glTranslated(0, 0, transz);
+
+    glRotated(rotacao, 0, 1, 0);
+    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+   // glTranslatef(-movX, 0, -movZ);
+    //glRotated(angloDrone, 0, 1, 0);
+
+    glDisable(GL_TEXTURE_2D);
+    for ( int j = 0; j < (corpo_tanque.faces).size(); ++j )
+    {
+
+            glBegin ( GL_POLYGON );
+
+            for (int i = 0; i < (corpo_tanque.faces[j]).size() ; ++i )
+            {
+
+
+                GLfloat normal[3] = {(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][0]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][1]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][2])};
+                glNormal3fv(normal);
+                GLfloat vert[3] = {(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][0]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][1]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][2])};
+                glVertex3fv (vert);
+
+
+            }
+
+            glEnd( );
+    }
+           glColor3f(0.5f, 0.5f, 0.5f);
+
+        for ( int j = 0; j < (rodaTras_tanque.faces).size(); ++j )
+        {
+
+            glBegin ( GL_POLYGON );
+
+            for (int i = 0; i < (rodaTras_tanque.faces[j]).size() ; ++i )
+            {
+
+                GLfloat normal[3] = {(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][0]),(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][1]),(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][2])};
+                glNormal3fv(normal);
+                GLfloat vert[3] = {(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][0]),(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][1]),(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][2])};
+                glVertex3fv (vert);
+
+            }
+
+            glEnd( );
+        }
+    glPopMatrix();
+
+
+    glutPostRedisplay();
+
+}
+
+void CarregaRodaDireita()
+{
+    glPushMatrix();
+    glScaled(2, 2, 2);
+    glRotated(180, 0, 1, 0);
+    glTranslated(0, 0, transz);
+    glRotated(giraRoda, 0, 1, 0);
+
+
+    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+   // glTranslatef(-movX, 0, -movZ);
+    //glRotated(angloDrone, 0, 1, 0);
+
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+        for ( int j = 0; j < (rodadireita_tanque.faces).size(); ++j )
+        {
+
+            glBegin ( GL_POLYGON );
+
+            for (int i = 0; i < (rodadireita_tanque.faces[j]).size() ; ++i )
+            {
+
+                GLfloat normal[3] = {(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][0]),(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][1]),(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][2])};
+                glNormal3fv(normal);
+                GLfloat vert[3] = {(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][0]),(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][1]),(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][2])};
+                glVertex3fv (vert);
+
+            }
+
+            glEnd( );
+        }
+
+    glPopMatrix();
+
+
+    glutPostRedisplay();
+}
+
+void CarregaRodaEsquerda()
+{
+    glPushMatrix();
+    glScaled(2, 2, 2);
+    glRotated(180, 0, 1, 0);
+    glTranslated(0, 0, transz);
+    glRotated(giraRoda, 0, 1, 0);
+
+
+    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+   // glTranslatef(-movX, 0, -movZ);
+    //glRotated(angloDrone, 0, 1, 0);
+
+    glDisable(GL_TEXTURE_2D);
+    for ( int j = 0; j < (rodaesquerda_tanque.faces).size(); ++j )
+    {
+
+        glBegin ( GL_POLYGON );
+
+        for (int i = 0; i < (rodaesquerda_tanque.faces[j]).size() ; ++i )
+        {
+
+            GLfloat normal[3] = {(rodaesquerda_tanque.normais[rodaesquerda_tanque.faces[j][i][2]][0]),(rodaesquerda_tanque.normais[rodaesquerda_tanque.faces[j][i][2]][1]),(rodaesquerda_tanque.normais[rodaesquerda_tanque.faces[j][i][2]][2])};
+            glNormal3fv(normal);
+            GLfloat vert[3] = {(rodaesquerda_tanque.vertices1[rodaesquerda_tanque.faces[j][i][0]][0]),(rodaesquerda_tanque.vertices1[rodaesquerda_tanque.faces[j][i][0]][1]),(rodaesquerda_tanque.vertices1[rodaesquerda_tanque.faces[j][i][0]][2])};
+            glVertex3fv (vert);
+
+        }
+
+        glEnd( );
+    }
+        glPopMatrix();
+
+
+    glutPostRedisplay();
+
+}
+
+void CarregaCanhao()
+{
+    glPushMatrix();
+    glScaled(2, 2, 2);
+    glRotated(180, 0, 1, 0);
+    glTranslated(0, 0, transz);
+    glRotated(rotacao, 0, 1, 0);
+
+    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+   // glTranslatef(-movX, 0, -movZ);
+    //glRotated(angloDrone, 0, 1, 0);
+
+    glDisable(GL_TEXTURE_2D);
+
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+        for ( int j = 0; j < (canhao_tanque.faces).size(); ++j )
+        {
+
+            glBegin ( GL_POLYGON );
+
+            for (int i = 0; i < (canhao_tanque.faces[j]).size() ; ++i )
+            {
+
+                GLfloat normal[3] = {(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][0]),(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][1]),(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][2])};
+                glNormal3fv(normal);
+                GLfloat vert[3] = {(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][0]),(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][1]),(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][2])};
+                glVertex3fv (vert);
+
+            }
+
+            glEnd( );
+        }
+    glPopMatrix();
+
+
+    glutPostRedisplay();
+
+}
+
+void CarregaBaseCanhao()
+{
+    glPushMatrix();
+    glScaled(2, 2, 2);
+    glRotated(180, 0, 1, 0);
+    glTranslated(0, 0, transz);
+
+    glRotated(rotacao, 0, 1, 0);
+    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+   // glTranslatef(-movX, 0, -movZ);
+    //glRotated(angloDrone, 0, 1, 0);
+
+    glDisable(GL_TEXTURE_2D);
+
+        glColor3f(0.5f, 0.5f, 0.5f);
+
+        for ( int j = 0; j < (basecanhao_tanque.faces).size(); ++j )
+        {
+
+            glBegin ( GL_POLYGON );
+
+            for (int i = 0; i < (basecanhao_tanque.faces[j]).size() ; ++i )
+            {
+
+                GLfloat normal[3] = {(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][0]),(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][1]),(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][2])};
+                glNormal3fv(normal);
+                GLfloat vert[3] = {(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][0]),(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][1]),(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][2])};
+                glVertex3fv (vert);
+
+            }
+
+            glEnd( );
+        }
+
+        glPopMatrix();
+
+
+    glutPostRedisplay();
+}
+
 
 // Função callback chamada para fazer o desenho
 void Desenha(void)
 {
-    // Limpa a janela de visualização com a cor
-    // de fundo definida previamente
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glPushMatrix();
-    // Desenha um aviao
-
     // Limpa a janela de visualização com a cor
     // de fundo definida previamente
     EspecificaParametrosVisualizacao();
@@ -159,89 +368,74 @@ void Desenha(void)
     glVertex3f(50.0, 50.0, -50.0);
     glEnd();
 
+    //glBindTexture(GL_TEXTURE_2D, textura_id);
     glBegin(GL_POLYGON); // Face inferior
     glNormal3f(0,-1,0); // Normal da face
     glTexCoord2f(1.0/4 ,0);
-    glVertex3f(-50.0, -50.0, -50.0);
+    glVertex3f(-50.0, 0, -50.0);
     glTexCoord2f(1.0/2 , 0);
-    glVertex3f(50.0, -50.0, -50.0);
+    glVertex3f(50.0, 0, -50.0);
     glTexCoord2f(1.0/2 , 1.0/3);
-    glVertex3f(50.0, -50.0, 50.0);
+    glVertex3f(50.0, 0, 50.0);
     glTexCoord2f(1.0/4 , 1.0/3);
-    glVertex3f(-50.0, -50.0, 50.0);
+    glVertex3f(-50.0, 0, 50.0);
     glEnd();
     glPopMatrix();
     // Execução dos comandos de desenho
 
-    glDisable(GL_TEXTURE_2D);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glScalef( 20.0, 20.0, 20.0);
-
-    for ( int j = 0; j < (Tanque.faces).size(); ++j )
-        {
-
-            glBegin ( GL_POLYGON );
-
-            for (int i = 0; i < (Tanque.faces[j]).size() ; ++i )
-            {
+    CarregaCorpo();
+    CarregaRodaDireita();
+    CarregaRodaEsquerda();
+    CarregaCanhao();
+    CarregaBaseCanhao();
 
 
-                GLfloat normal[3] = {(Tanque.normais[Tanque.faces[j][i][2]][0]),(Tanque.normais[Tanque.faces[j][i][2]][1]),(Tanque.normais[Tanque.faces[j][i][2]][2])};
-                glNormal3fv(normal);
-
-                GLfloat vert[3] = {(Tanque.vertices1[Tanque.faces[j][i][0]][0]),(Tanque.vertices1[Tanque.faces[j][i][0]][1]),(Tanque.vertices1[Tanque.faces[j][i][0]][2])};
-                glVertex3fv ( vert );
-
-
-            }
-
-            glEnd( );
-        }
-
-    // Execução dos comandos de desenho
+    glPopMatrix();
 
     glutSwapBuffers();
-
 }
 
 
 // Inicialização
 void Inicializa(void)
 {
-    Tanque.Carregar("tanque.obj");//carrega o arquivo
 
-    // Define a cor de fundo da janela de visualização como branca
+    corpo_tanque.Carregar("corpo.obj");//carrega o arquivo
+    rodadireita_tanque.Carregar("roda_direita.obj");
+    rodaesquerda_tanque.Carregar("roda_esquerda.obj");
+    rodaTras_tanque.Carregar("roda_tras.obj");
+    canhao_tanque.Carregar("canhao_cano.obj");
+    basecanhao_tanque.Carregar("canhao_base.obj");
+
+// Define a cor de fundo da janela de visualização como branca
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-
-    // Habilita a definição da cor do material a partir da cor corrente
+// Habilita a definição da cor do material a partir da cor corrente
     glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial (GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE );
-    //Habilita o uso de iluminação
+//Habilita o uso de iluminação
     glEnable(GL_LIGHTING);
-    // Habilita a luz de número 0
+// Habilita a luz de número 0
     glEnable(GL_LIGHT0);
-    // Habilita o depth-buffering
+// Habilita o depth-buffering
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);// normaliza as normais
-    // Habilita o modelo de colorização de Gouraud
-    glShadeModel(GL_SMOOTH);
-
 
 // Inicializa a variável que especifica o ângulo da projeção
 // perspectiva
     angle=50;
 // Inicializa as variáveis usadas para alterar a posição do
 // observador virtual
-    rotX = 0;
-    rotY = 0;
 
-    obsX = 0.0;
-    obsY = 0.0;
-    obsZ = 180.0;
+    rotX = 30;
+    rotY = 0;
+    obsZ = 0;
+    transx = 0;
+    transy = 0;
+    transz = 0;
+    giraRoda = 0;
+    rotacao = 0;
+
     try
     {
-        ifstream arq2("sky.bmp" ,ios::binary);
+        ifstream arq2("chao.bmp" ,ios::binary);
         char c;
         if(!arq2)
             cout << "Erro abriu";
@@ -270,6 +464,13 @@ void Inicializa(void)
         cout << "Erro ao ler imagem" << endl;
     }
 
+    // Define os filtros de magnificação e minificação
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Seleciona o modo de aplicação da textura
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
     // lado
     glGenTextures(1,&textura_id2);
 
@@ -286,27 +487,29 @@ void Inicializa(void)
 
     // Seleciona o modo de aplicação da textura
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
 }
 
 
 // Função usada para especificar a posição do observador virtual
 void PosicionaObservador(void)
 {
-
     // Especifica sistema de coordenadas do modelo
+
     glMatrixMode(GL_MODELVIEW);
-
-
     // Inicializa sistema de coordenadas do modelo
     glLoadIdentity();
-   // DefineIluminacao();
-
-    gluLookAt(obsX,obsY,obsZ,0,0,0,0,1,0);
     // Especifica posição do observador e do alvo
+
+
+    gluLookAt(0,0,48,0,20,0,0,1,0);
+
+    glTranslatef(0,0,obsZ);
     glRotatef(rotX,1,0,0);
     glRotatef(rotY,0,1,0);
+    DefineIluminacao();
 
+    //printf("%f",rotX);
+    //printf("%f",rotY);
 }
 
 
@@ -314,6 +517,7 @@ void PosicionaObservador(void)
 void EspecificaParametrosVisualizacao(void)
 {
     // Especifica sistema de coordenadas de projeção
+    glViewport(0,0,1000,1000);
     glMatrixMode(GL_PROJECTION);
     // Inicializa sistema de coordenadas de projeção
     glLoadIdentity();
@@ -362,24 +566,45 @@ void GerenciaMouse(int button, int state, int x, int y)
     glutPostRedisplay();
 }
 
-
 // Função callback chamada para gerenciar eventos de teclas especiais (F1,PgDn,...)
 void TeclasEspeciais (int tecla, int x, int y)
 {
     switch (tecla)
     {
     case GLUT_KEY_LEFT:
-        rotY--;
-        break;
+        {
+            giraRoda++;
+            break;
+        }
+
     case GLUT_KEY_RIGHT:
-        rotY++;
-        break;
+        {
+            giraRoda--;
+            break;
+        }
+
     case GLUT_KEY_UP:
-        rotX++;
-        break;
+        {
+            if(transz <= 60)
+            {
+                transz++;
+            }
+            else
+                transz = transz;
+            break;
+        }
+
     case GLUT_KEY_DOWN:
-        rotX--;
-        break;
+        {
+            if(transz >= 0)
+            {
+                transz--;
+            }
+            else
+                transz = transz;
+            break;
+        }
+
     case GLUT_KEY_HOME:
         obsZ++;
         break;
@@ -391,54 +616,31 @@ void TeclasEspeciais (int tecla, int x, int y)
     glutPostRedisplay();
 }
 
-void Timer(int value)
+
+void TeclasNormais (unsigned char tecla,int x, int y)
 {
-    if(value > 0)
+    switch (tecla)
     {
-        value--;
-        glutTimerFunc(200,Timer,value);
-        glutPostRedisplay();
+    case 'I':
+        // Habilita o modelo de colorização de Gouraud
+        glShadeModel(GL_SMOOTH);
+        break;
+    case 'i':
+        // Habilita o modelo de colorização de Gouraud
+        glShadeModel(GL_FLAT);
+        break;
+
+    case 'w':
+        rotacao = giraRoda;
     }
+    PosicionaObservador();
+    glutPostRedisplay();
 }
 
-void Teclado(unsigned char key, int x, int y)
+
+void my_idle_callback() //No params
 {
-
-    if(key == ',')
-    {
-        glShadeModel(GL_SMOOTH);
-    }
-    if(key == '.')
-    {
-        glShadeModel(GL_FLAT);
-    }
-    if(key == '0'){
-        figura = 0;
-    }
-    if(key == '1'){
-        figura = 1;
-    }
-    if(key == 'r' && r >= 0.0){
-        r -= 0.1;
-    }
-    if(key == 'R' && r <= 1.0){
-        r += 0.1;
-    }
-    if(key == 'g' && g >= 0.0){
-        g -= 0.1;
-    }
-    if(key == 'G' && g <= 1.0){
-        g += 0.1;
-    }
-    if(key == 'b' && b >= 0.0){
-        b -= 0.1;
-    }
-    if(key == 'B' && b <= 1.0){
-        b += 0.1;
-    }
-
     glutPostRedisplay();
-
 }
 
 // Programa Principal
@@ -456,10 +658,10 @@ int main()
     glutInitWindowPosition(5,5);
 
     // Especifica o tamanho inicial em pixels da janela GLUT
-    glutInitWindowSize(800,800);
+    glutInitWindowSize(600,600);
 
     // Cria a janela passando como argumento o titulo da mesma
-    glutCreateWindow("Desenho de um objeto com iluminação");
+    glutCreateWindow("Textura");
 
     // Registra a funcao callback de redesenho da janela de visualizacao
     glutDisplayFunc(Desenha);
@@ -468,9 +670,12 @@ int main()
     // Registra a funcao callback para tratamento do redimensionamento da janela
     glutReshapeFunc(AlteraTamanhoJanela);
     // Registra a funcao callback para tratamento do mouse
+    glutKeyboardFunc(TeclasNormais);
     glutMouseFunc(GerenciaMouse);
-    glutKeyboardFunc(Teclado);
+    glutIdleFunc(my_idle_callback);
 
     Inicializa();
     glutMainLoop();
+
 }
+

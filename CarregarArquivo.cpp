@@ -15,25 +15,15 @@ public:
     vector<vector<GLfloat> > normais;   //guarda as normais
     vector<vector<GLfloat> > texturas;  //guarda as texturas
     vector<vector<vector<GLint> > > faces; //guarda as faces
-
-
-    CarregarArquivo(){}
-
-    void Carregar(char in[])
-    {
-        string *tPonteiro = new string;
-        string &t = *tPonteiro;
+    void Carregar(char in[]){
 
         ifstream arquivo(in);
-        //string t;
         if(!arquivo)
             cout << "Erro ao ler o arquivo";
         char lido;
         arquivo.get(lido); // pega o primeiro char
-
         while(arquivo)
         {
-
 
             if(lido == 'v') // olha se é um v,vn ou vt
             {
@@ -88,18 +78,15 @@ public:
 
                 }
             }
-
             if(lido == 'f')
             {
                 vector<vector<GLint> > face; // a face pode ter qualquer numero de vertices...
                 arquivo.get(lido);
-
                 if(lido == ' ')
                 {
-
                     bool barras = true;
 
-                    //string t;
+                    string t;
                     getline(arquivo,t);
 
                     int found = t.find("//");
@@ -288,13 +275,35 @@ public:
                                     vertice_resto = aux4;
 
                                 }
+
+
+
+
                             }
+
                             faces.push_back(face);
+
+
+
+
+
+
                         }
+
                     }
+
+
                 }
+
+
+
+
             }
+
+
             arquivo.get(lido);
+
         }
+
     }
 };
