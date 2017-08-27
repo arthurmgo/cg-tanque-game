@@ -1,9 +1,4 @@
-// TeaPot3D.cpp - Isabel H. Manssour
-// Um programa OpenGL que exemplifica a visualização
-// de objetos 3D.
-
 #ifdef __APPLE__
-#include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
@@ -45,7 +40,7 @@ float final = 1.0;
 GLuint textura_id, textura_id2, textura_id3;
 
 
-GLfloat angle, fAspect, rotX, rotY, transx, transy, transz, giraRoda, rotacao;
+GLfloat angle, fAspect, rotX, rotY, transx, transy, transz, giraRoda, rotacao, moverCameraz;
 GLdouble obsX, obsY, obsZ;
 
 
@@ -286,7 +281,6 @@ void CarregaBaseCanhao()
     glutPostRedisplay();
 }
 
-
 // Função callback chamada para fazer o desenho
 void Desenha(void)
 {
@@ -359,13 +353,13 @@ void Desenha(void)
     glBegin(GL_POLYGON); // Face superior
     glNormal3f(0,1,0); // Normal da face
     glTexCoord2f(1.0/4 , 1.0);
-    glVertex3f(-50.0, 50.0, -50.0);
+    glVertex3f(-50.0, 49.0, -50.0);
     glTexCoord2f(1.0/4 , 2.0/3);
-    glVertex3f(-50.0, 50.0, 50.0);
+    glVertex3f(-50.0, 49.0, 50.0);
     glTexCoord2f(1.0/2 , 2.0/3);
-    glVertex3f(50.0, 50.0, 50.0);
+    glVertex3f(50.0, 49.0, 50.0);
     glTexCoord2f(1.0/2 , 1.0);
-    glVertex3f(50.0, 50.0, -50.0);
+    glVertex3f(50.0, 49.0, -50.0);
     glEnd();
 
     //glBindTexture(GL_TEXTURE_2D, textura_id);
@@ -394,7 +388,6 @@ void Desenha(void)
 
     glutSwapBuffers();
 }
-
 
 // Inicialização
 void Inicializa(void)
@@ -432,6 +425,7 @@ void Inicializa(void)
     transz = 0;
     giraRoda = 0;
     rotacao = 0;
+    moverCameraz = 0;
 
     try
     {
@@ -489,7 +483,6 @@ void Inicializa(void)
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 }
 
-
 // Função usada para especificar a posição do observador virtual
 void PosicionaObservador(void)
 {
@@ -501,9 +494,9 @@ void PosicionaObservador(void)
     // Especifica posição do observador e do alvo
 
 
-    gluLookAt(0,0,48,0,20,0,0,1,0);
+    gluLookAt(0,0,48,0,15,0,0,1,0);
 
-    glTranslatef(0,0,obsZ);
+    glTranslatef(0,0,-obsZ);
     glRotatef(rotX,1,0,0);
     glRotatef(rotY,0,1,0);
     DefineIluminacao();
@@ -511,7 +504,6 @@ void PosicionaObservador(void)
     //printf("%f",rotX);
     //printf("%f",rotY);
 }
-
 
 // Função usada para especificar o volume de visualização
 void EspecificaParametrosVisualizacao(void)
@@ -528,7 +520,6 @@ void EspecificaParametrosVisualizacao(void)
     PosicionaObservador();
 }
 
-
 // Função callback chamada quando o tamanho da janela é alterado
 void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 {
@@ -543,7 +534,6 @@ void AlteraTamanhoJanela(GLsizei w, GLsizei h)
 
     EspecificaParametrosVisualizacao();
 }
-
 
 // Callback para gerenciar eventos do mouse
 void GerenciaMouse(int button, int state, int x, int y)
@@ -588,9 +578,13 @@ void TeclasEspeciais (int tecla, int x, int y)
             if(transz <= 60)
             {
                 transz++;
+                moverCameraz++;
             }
             else
+            {
                 transz = transz;
+                moverCameraz = moverCameraz;
+            }
             break;
         }
 
@@ -616,7 +610,6 @@ void TeclasEspeciais (int tecla, int x, int y)
     glutPostRedisplay();
 }
 
-
 void TeclasNormais (unsigned char tecla,int x, int y)
 {
     switch (tecla)
@@ -636,7 +629,6 @@ void TeclasNormais (unsigned char tecla,int x, int y)
     PosicionaObservador();
     glutPostRedisplay();
 }
-
 
 void my_idle_callback() //No params
 {
@@ -678,4 +670,3 @@ int main()
     glutMainLoop();
 
 }
-
