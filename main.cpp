@@ -579,12 +579,14 @@ void TeclasEspeciais (int tecla, int x, int y)
     {
     case GLUT_KEY_LEFT:
     {
+        if(giraRoda < 45)
         giraRoda++;
         break;
     }
 
     case GLUT_KEY_RIGHT:
     {
+        if(giraRoda > -45)
         giraRoda--;
         break;
     }
