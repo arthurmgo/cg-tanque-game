@@ -621,14 +621,14 @@ void TeclasEspeciais (int tecla, int x, int y)
         if(giraRoda > 0 ){
             if(giraRoda != rotacao)
             {
-                rotacao++ ;
+                rotacao-- ;
                 giraRoda--;
             }
         }
         if(giraRoda < 0 ){
             if(giraRoda != rotacao)
             {
-                rotacao-- ;
+                rotacao++ ;
                 giraRoda++;
             }
 
