@@ -22,7 +22,7 @@ GLint especMaterial;
 
 using namespace std;
 void EspecificaParametrosVisualizacao(void);
-
+void PosicionaObservador(void);
 
 GLubyte lado[2048][2048][3];
 
@@ -44,6 +44,11 @@ GLuint textura_id, textura_id2, textura_id3;
 GLfloat angle, fAspect, rotX, rotY, transy, transz, giraRoda, rotacao, moverCameraz;
 GLfloat transx = 180;
 GLdouble obsX, obsY, obsZ;
+
+GLfloat offset[3] = {50, 60, 0};
+GLfloat objectPosition[3] = {movX, 0, movZ};
+GLfloat cameraPosition[3];
+
 
 
 void DefineIluminacao (void)
@@ -299,6 +304,9 @@ void Desenha(void)
     // Limpa a janela de visualização com a cor
     // de fundo definida previamente
     EspecificaParametrosVisualizacao();
+
+    glViewport(0, 0, 700, 700);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     DefineIluminacao();
     // Troca cor corrente para azul
