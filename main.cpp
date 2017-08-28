@@ -8,7 +8,11 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include <ctime>
 #include "CarregarArquivo.cpp"
+
+#define G 9.8
+#define randomico() ((float) rand()/ RAND_MAX) //Numero aleatório entre 0 e1
 
 
 
@@ -19,6 +23,48 @@ CarregarArquivo rodaesquerda_tanque;
 CarregarArquivo basecanhao_tanque;
 CarregarArquivo canhao_tanque;
 GLint especMaterial;
+
+//*****************************NOVO CODIGO *****************************************
+
+typedef struct
+{
+    bool vis;
+    float x;
+    float y;
+    float z;
+    float x0;
+    float y0;
+    float z0;
+    float forcax;
+    float forcay;
+    float forcaz;
+    float xMax;
+    float yMax;
+    float zMax;
+    float tempo;
+    float vel;
+    float norma;
+
+} Bola;
+
+Bola tiro;
+
+int rodarHori = 0;
+int rodarVert = 0;
+
+float ventox;
+float ventoz;
+
+float forca = 1.0;
+
+int n = 1;
+int cont = 0;
+
+double d_x, d_z;
+
+int alvovis = 1;
+
+//*****************************NOVO CODIGO *****************************************
 
 using namespace std;
 void EspecificaParametrosVisualizacao(void);
@@ -76,15 +122,8 @@ void DefineIluminacao (void)
 void CarregaCorpo()
 {
     glPushMatrix();
-    glScaled(2, 2, 2);
-    //glRotated(180, 0, 1, 0);
-    //glTranslated(0, 0, transz);
+    //glScaled(2, 2, 2);
     glRotated(rotacao, 0, 1, 0);
-
-
-    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-    // glTranslatef(-movX, 0, -movZ);
-    //glRotated(angloDrone, 0, 1, 0);
 
     glDisable(GL_TEXTURE_2D);
     for ( int j = 0; j < (corpo_tanque.faces).size(); ++j )
@@ -135,7 +174,7 @@ void CarregaCorpo()
 void CarregaRodaDireita()
 {
     glPushMatrix();
-    glScaled(2, 2, 2);
+    //glScaled(2, 2, 2);
     //glRotated(180, 0, 1, 0);
     glRotated(rotacao, 0, 1, 0);
     glTranslated(-1.48226,0.86792,+3.1956);
@@ -178,7 +217,7 @@ void CarregaRodaDireita()
 void CarregaRodaEsquerda()
 {
     glPushMatrix();
-    glScaled(2, 2, 2);
+   // glScaled(2, 2, 2);
     //glRotated(180, 0, 1, 0);
     glRotated(rotacao, 0, 1, 0);
     glTranslated(+1.50872,0.74939,+3.16875);
@@ -221,14 +260,13 @@ void CarregaRodaEsquerda()
 void CarregaCanhao()
 {
     glPushMatrix();
-    glScaled(2, 2, 2);
-    //glRotated(180, 0, 1, 0);
-    //glTranslated(0, 0, transz);
+    //glScaled(2, 2, 2);
     glRotated(rotacao, 0, 1, 0);
+    glTranslated(-1.13283,3.5033,-0.83108);
+    glRotated(rodarHori, 0.0, 1.0, 0.0);
+    glRotated(-rodarVert, 1.0, 0.0, 0.0);
 
-    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-    // glTranslatef(-movX, 0, -movZ);
-    //glRotated(angloDrone, 0, 1, 0);
+
 
     glDisable(GL_TEXTURE_2D);
 
@@ -261,14 +299,12 @@ void CarregaCanhao()
 void CarregaBaseCanhao()
 {
     glPushMatrix();
-    glScaled(2, 2, 2);
-    //glRotated(180, 0, 1, 0);
-    //glTranslated(0, 0, transz);
+    //glScaled(2, 2, 2);
 
     glRotated(rotacao, 0, 1, 0);
-    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-    // glTranslatef(-movX, 0, -movZ);
-    //glRotated(angloDrone, 0, 1, 0);
+    glTranslated(-1.13283,3.5033,-0.83108);
+    glRotated(rodarHori, 0.0, 1.0, 0.0);
+
 
     glDisable(GL_TEXTURE_2D);
 
@@ -298,6 +334,43 @@ void CarregaBaseCanhao()
     glutPostRedisplay();
 }
 
+void Trajetoria(void)
+{
+    float tempo = 0.0;
+
+    float raio = 2.26811*cos((rodarVert*M_PI)/180.0);
+
+    float y = 2.26811*sin((rodarVert*M_PI)/180.0);
+    float x = -1.0*raio*sin((rodarHori*M_PI)/180.0);
+    float z = -1.0*raio*cos((rodarHori*M_PI)/180.0);
+    //teste
+    float norma = sqrt(x*x + y*y + z*z);
+
+    float  forcax = x/norma;
+    float  forcay = y/norma;
+    float  forcaz = z/norma;
+
+    y += 3.1;
+    x += 1.13283;
+    z -= 0.83108;
+    //glTranslated(-1.13283,3.5033,-0.83108);
+    float x0 = x;
+    float y0 = y;
+    float z0 = z;
+
+    glColor3f(0.5, 1.0,0.5);
+    glBegin(GL_LINE_STRIP);
+    do
+    {
+        x =    x0  + forca*forcax*tempo;
+        y =    y0  + forca*forcay*tempo - 0.5*G*tempo*tempo;
+        z =    z0  + forca*forcaz*tempo;
+        glVertex3f(x,y,z);
+        tempo += 0.01;
+    }
+    while(tempo < 30);
+    glEnd();
+}
 // Função callback chamada para fazer o desenho
 void Desenha(void)
 {
@@ -305,7 +378,7 @@ void Desenha(void)
     // de fundo definida previamente
     EspecificaParametrosVisualizacao();
 
-    glViewport(0, 0, 700, 700);
+    glViewport(0, 0, 1366, 768);// era 700/700
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     DefineIluminacao();
@@ -397,16 +470,33 @@ void Desenha(void)
     glPopMatrix();
     // Execução dos comandos de desenho
 
+
     glRotated(180, 0, 1, 0);
-
     glTranslated(transx, 0, transz);
-
+    glPushMatrix();
     CarregaCorpo();
     CarregaRodaDireita();
     CarregaRodaEsquerda();
-    CarregaCanhao();
     CarregaBaseCanhao();
+    CarregaCanhao();
+    glPopMatrix();
 
+    //glRotated(180, 0, 1, 0);
+    //glTranslated(1.13283,3.5033,-6.13108);
+    glPushMatrix();
+    glRotated(180, 0, 1, 0);
+    glRotated(rotacao, 0, 1, 0);
+    //glTranslated(1.12548,3.59078,-1.42164);
+    if(!tiro.vis){
+        Trajetoria();
+    }else{
+        glPushMatrix();
+        glColor3f(0.0, 0.0,0.0);
+        glTranslated(tiro.x, tiro.y, tiro.z);
+        glutSolidSphere(0.2, 10, 10);
+        glPopMatrix();
+    }
+    glPopMatrix();
 
     glPopMatrix();
 
@@ -423,6 +513,17 @@ void Inicializa(void)
     rodaTras_tanque.Carregar("roda_tras.obj");
     canhao_tanque.Carregar("canhao_cano.obj");
     basecanhao_tanque.Carregar("canhao_base.obj");
+
+    /*******************************/
+    srand(time(0));
+    d_z = (25.0 * randomico()) + 25.0;
+    d_x = (40.0 - (-40.0)) * randomico() + (-40.0);
+
+    tiro.vis = false;
+    ventox = (2.0 - (-2.0)) * randomico() + (-2.0);
+    ventoz = (2.0 - (0.0)) * randomico() + (0.0);
+
+    /*****************************/
 
 // Define a cor de fundo da janela de visualização como branca
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -661,23 +762,147 @@ void TeclasEspeciais (int tecla, int x, int y)
     glutPostRedisplay();
 }
 
-void TeclasNormais (unsigned char tecla,int x, int y)
+void TeclasNormais (unsigned char key,int x, int y)
 {
-    switch (tecla)
-    {
-    case 'I':
-        // Habilita o modelo de colorização de Gouraud
-        glShadeModel(GL_SMOOTH);
-        break;
-    case 'i':
-        // Habilita o modelo de colorização de Gouraud
-        glShadeModel(GL_FLAT);
-        break;
 
-    case 'w':
-        rotacao = giraRoda;
+    if (key == 'a' && rodarHori < 90)
+    {
+        rodarHori = rodarHori + 1;
+        rodarHori = rodarHori%360;
+    }
+    if (key == 'd' && rodarHori > -90)
+    {
+        rodarHori = rodarHori - 1;
+        rodarHori = rodarHori%360;
+    }
+    if (key == 'w' && rodarVert < 90)
+    {
+        rodarVert = rodarVert + 1;
+        rodarVert = rodarVert%360;
+    }
+    if (key == 's' && rodarVert > -45)
+    {
+        rodarVert = rodarVert - 1;
+        rodarVert = rodarVert%360;
+    }
+    if (key == 'e' && !tiro.vis)
+    {
+        tiro.vis = true;
+        tiro.tempo = 0.0;
+
+
+        float raio = 2.26811*cos((rodarVert*M_PI)/180.0);
+
+        tiro.y = 2.26811*sin((rodarVert*M_PI)/180.0);
+        tiro.x = (-1.0*raio*sin((rodarHori*M_PI)/180.0));
+        tiro.z = (-1.0*raio*cos((rodarHori*M_PI)/180.0));
+
+        float norma = sqrt(tiro.x*tiro.x + tiro.y*tiro.y + tiro.z*tiro.z);
+
+        tiro.norma = norma;
+
+
+        tiro.forcax = tiro.x/norma;
+        tiro.forcay = tiro.y/norma;
+        tiro.forcaz = tiro.z/norma;
+
+        //tiro.y = tiro.y + 2.0;
+        tiro.y += 3.1;
+        tiro.x += 1.13283;
+        tiro.z -= 0.83108;
+
+        tiro.vel = forca;
+
+        tiro.x0 = tiro.x;
+        tiro.y0 = tiro.y;
+        tiro.z0 = tiro.z;
+
+        tiro.xMax = 0.0;
+        tiro.yMax = 0.0;
+        tiro.zMax = 0.0;
+
+        //PlaySound("sounds\\bomba.wav", NULL, 1);
+    }
+    if (key == '+')
+    {
+        if(forca < 25)
+        {
+            forca += 1.0;
+            n++;
+        }
+    }
+    if (key == '-')
+    {
+        if(forca > 1)
+        {
+            forca -= 1.0;
+            n--;
+        }
+
     }
     PosicionaObservador();
+    glutPostRedisplay();
+}
+
+
+void Timer(int value)
+{
+    float angulo;
+    float distancia;
+
+    if(tiro.vis)
+    {
+        if(tiro.vel > 0.1)
+        {
+
+            tiro.x =    tiro.x0  + tiro.vel*tiro.forcax*tiro.tempo + ventox*tiro.tempo;
+            tiro.y =    tiro.y0  + tiro.vel*tiro.forcay*tiro.tempo - 0.5*G*tiro.tempo*tiro.tempo;
+            tiro.z =    tiro.z0  + tiro.vel*tiro.forcaz*tiro.tempo + (-1)*ventoz*tiro.tempo;
+
+            if(tiro.y > tiro.yMax)
+            {
+                tiro.yMax = tiro.y;
+                tiro.xMax = tiro.x;
+                tiro.zMax = tiro.z;
+            }
+
+            if(tiro.y <0.2)
+            {
+                distancia = sqrt((tiro.x - tiro.xMax)*(tiro.x - tiro.xMax) + (tiro.z - tiro.zMax)*(tiro.z - tiro.zMax));
+                angulo = atan(tiro.yMax/(distancia));
+
+                tiro.forcay = ((2.0*sin(angulo))/tiro.norma);
+                tiro.x0 = tiro.x;
+                tiro.y0 = tiro.y;
+                tiro.z0 = tiro.z;
+                tiro.vel = tiro.vel*0.9;
+                tiro.tempo = 0.0;
+            }
+
+            if ((tiro.vel < 0.1 || tiro.z < -50 || tiro.x < -50 || tiro.x > 50) && tiro.y < 0.2)
+            {
+                tiro.vis = false;
+                //if(cont == 0)
+                    //PlaySound("sounds\\errou.wav", NULL, 1);
+                cont = 0;
+                ventox = (2.0 - (-2.0)) * randomico() + (-2.0);
+                ventoz = (2.0 - (0.0)) * randomico() + (0.0);
+            }
+
+            float d0 = 1.2;
+            float d1 = sqrt(pow((d_x - tiro.x), 2) + pow((1.0 - tiro.y), 2) + pow((-d_z - tiro.z), 2));
+            if(d1 < d0)
+            {
+                alvovis = 0;
+                //PlaySound("sounds\\quebrou.wav", NULL, 1);
+                cont++;
+            }
+
+        }
+        tiro.tempo += 0.01;
+    }
+
+    glutTimerFunc(10,Timer,0);
     glutPostRedisplay();
 }
 
@@ -705,6 +930,8 @@ int main()
 
     // Cria a janela passando como argumento o titulo da mesma
     glutCreateWindow("Textura");
+
+    glutTimerFunc(10,Timer,0);
 
     // Registra a funcao callback de redesenho da janela de visualizacao
     glutDisplayFunc(Desenha);
