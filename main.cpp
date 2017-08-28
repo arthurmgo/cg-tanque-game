@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include "CarregarArquivo.cpp"
 
 
@@ -397,8 +398,9 @@ void Desenha(void)
     // Execução dos comandos de desenho
 
     glRotated(180, 0, 1, 0);
-    glRotated(transx, 0, 1, 0);
-    glTranslated(0, 0, transz);
+
+    glTranslated(transx, 0, transz);
+
     CarregaCorpo();
     CarregaRodaDireita();
     CarregaRodaEsquerda();
@@ -531,7 +533,7 @@ void PosicionaObservador(void)
 void EspecificaParametrosVisualizacao(void)
 {
     // Especifica sistema de coordenadas de projeção
-    glViewport(0,0,1000,1000);
+    glViewport(0,0,1366,768);
     glMatrixMode(GL_PROJECTION);
     // Inicializa sistema de coordenadas de projeção
     glLoadIdentity();
@@ -598,67 +600,51 @@ void TeclasEspeciais (int tecla, int x, int y)
     case GLUT_KEY_UP:
     {
 
-        if(giraRoda > 0 )
-        {
+        if(giraRoda > 0 ){
             if(giraRoda != rotacao)
             {
-                transx++;
                 rotacao++ ;
                 giraRoda--;
             }
         }
-        if(giraRoda < 0 )
-        {
+        if(giraRoda < 0 ){
             if(giraRoda != rotacao)
             {
-                transx--;
                 rotacao-- ;
                 giraRoda++;
             }
 
         }
 
-        if(transz <= 60)
-        {
-            transz++;
-            moverCameraz++;
-        }
-        else
-        {
-            transz = transz;
-            moverCameraz = moverCameraz;
-        }
+        transx += sin(M_PI*rotacao/180);
+        transz += cos(M_PI*rotacao/180);
+
+
         break;
     }
 
     case GLUT_KEY_DOWN:
     {
 
-                if(giraRoda < 0 )
-        {
+        if(giraRoda > 0 ){
             if(giraRoda != rotacao)
             {
-                transx++;
-                rotacao++ ;
+                rotacao-- ;
                 giraRoda--;
             }
         }
-        if(giraRoda > 0 )
-        {
+        if(giraRoda < 0 ){
             if(giraRoda != rotacao)
             {
-                transx--;
-                rotacao-- ;
+                rotacao++ ;
                 giraRoda++;
             }
 
         }
-        if(transz >= 0)
-        {
-            transz--;
-        }
-        else
-            transz = transz;
+
+        transx -= sin(M_PI*rotacao/180);
+        transz -= cos(M_PI*rotacao/180);
+
         break;
     }
 
@@ -713,7 +699,7 @@ int main()
     glutInitWindowPosition(5,5);
 
     // Especifica o tamanho inicial em pixels da janela GLUT
-    glutInitWindowSize(600,600);
+    glutInitWindowSize(1366,768);
 
     // Cria a janela passando como argumento o titulo da mesma
     glutCreateWindow("Textura");
