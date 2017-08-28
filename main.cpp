@@ -15,7 +15,6 @@
 #define randomico() ((float) rand()/ RAND_MAX) //Numero aleatório entre 0 e1
 
 
-
 CarregarArquivo corpo_tanque;
 CarregarArquivo rodaTras_tanque;
 CarregarArquivo rodadireita_tanque;
@@ -125,6 +124,13 @@ void CarregaCorpo()
     //glScaled(2, 2, 2);
     glRotated(rotacao, 0, 1, 0);
 
+<<<<<<< HEAD
+=======
+
+    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+    // glTranslatef(-movX, 0, -movZ);
+    //glRotated(angloDrone, 0, 1, 0);
+>>>>>>> 9cd2889f3c2b40a722d47686e6e43c4b3b1cb3d3
     glDisable(GL_TEXTURE_2D);
     for ( int j = 0; j < (corpo_tanque.faces).size(); ++j )
     {
@@ -137,6 +143,8 @@ void CarregaCorpo()
 
             GLfloat normal[3] = {(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][0]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][1]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][2])};
             glNormal3fv(normal);
+            //GLfloat textura[2] = {(corpo_tanque.texturas[corpo_tanque.faces[j][i][1]][0]),(corpo_tanque.texturas[corpo_tanque.faces[j][i][1]][1])};
+            //glTexCoord2fv(textura);
             GLfloat vert[3] = {(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][0]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][1]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][2])};
             glVertex3fv (vert);
 
@@ -552,6 +560,7 @@ void Inicializa(void)
     rotacao = 0;
     moverCameraz = 0;
 
+
     try
     {
         ifstream arq2("chao.bmp",ios::binary);
@@ -621,7 +630,7 @@ void PosicionaObservador(void)
 
     gluLookAt(0,0,48,0,15,0,0,1,0);
 
-    glTranslatef(0,0,-obsZ);
+    glTranslatef(0,0,obsZ);
     glRotatef(rotX,1,0,0);
     glRotatef(rotY,0,1,0);
     DefineIluminacao();
@@ -758,6 +767,8 @@ void TeclasEspeciais (int tecla, int x, int y)
         obsZ--;
         break;
     }
+
+
     PosicionaObservador();
     glutPostRedisplay();
 }
