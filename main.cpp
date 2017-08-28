@@ -40,7 +40,8 @@ float final = 1.0;
 GLuint textura_id, textura_id2, textura_id3;
 
 
-GLfloat angle, fAspect, rotX, rotY, transx, transy, transz, giraRoda, rotacao, moverCameraz;
+GLfloat angle, fAspect, rotX, rotY, transy, transz, giraRoda, rotacao, moverCameraz;
+GLfloat transx = 180;
 GLdouble obsX, obsY, obsZ;
 
 
@@ -70,53 +71,54 @@ void CarregaCorpo()
 {
     glPushMatrix();
     glScaled(2, 2, 2);
-    glRotated(180, 0, 1, 0);
-    glTranslated(0, 0, transz);
-
+    //glRotated(180, 0, 1, 0);
+    //glTranslated(0, 0, transz);
     glRotated(rotacao, 0, 1, 0);
+
+
     //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-   // glTranslatef(-movX, 0, -movZ);
+    // glTranslatef(-movX, 0, -movZ);
     //glRotated(angloDrone, 0, 1, 0);
 
     glDisable(GL_TEXTURE_2D);
     for ( int j = 0; j < (corpo_tanque.faces).size(); ++j )
     {
 
-            glBegin ( GL_POLYGON );
+        glBegin ( GL_POLYGON );
 
-            for (int i = 0; i < (corpo_tanque.faces[j]).size() ; ++i )
-            {
-
-
-                GLfloat normal[3] = {(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][0]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][1]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][2])};
-                glNormal3fv(normal);
-                GLfloat vert[3] = {(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][0]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][1]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][2])};
-                glVertex3fv (vert);
-
-
-            }
-
-            glEnd( );
-    }
-           glColor3f(0.5f, 0.5f, 0.5f);
-
-        for ( int j = 0; j < (rodaTras_tanque.faces).size(); ++j )
+        for (int i = 0; i < (corpo_tanque.faces[j]).size() ; ++i )
         {
 
-            glBegin ( GL_POLYGON );
 
-            for (int i = 0; i < (rodaTras_tanque.faces[j]).size() ; ++i )
-            {
+            GLfloat normal[3] = {(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][0]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][1]),(corpo_tanque.normais[corpo_tanque.faces[j][i][2]][2])};
+            glNormal3fv(normal);
+            GLfloat vert[3] = {(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][0]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][1]),(corpo_tanque.vertices1[corpo_tanque.faces[j][i][0]][2])};
+            glVertex3fv (vert);
 
-                GLfloat normal[3] = {(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][0]),(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][1]),(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][2])};
-                glNormal3fv(normal);
-                GLfloat vert[3] = {(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][0]),(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][1]),(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][2])};
-                glVertex3fv (vert);
 
-            }
-
-            glEnd( );
         }
+
+        glEnd( );
+    }
+    glColor3f(0.5f, 0.5f, 0.5f);
+
+    for ( int j = 0; j < (rodaTras_tanque.faces).size(); ++j )
+    {
+
+        glBegin ( GL_POLYGON );
+
+        for (int i = 0; i < (rodaTras_tanque.faces[j]).size() ; ++i )
+        {
+
+            GLfloat normal[3] = {(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][0]),(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][1]),(rodaTras_tanque.normais[rodaTras_tanque.faces[j][i][2]][2])};
+            glNormal3fv(normal);
+            GLfloat vert[3] = {(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][0]),(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][1]),(rodaTras_tanque.vertices1[rodaTras_tanque.faces[j][i][0]][2])};
+            glVertex3fv (vert);
+
+        }
+
+        glEnd( );
+    }
     glPopMatrix();
 
 
@@ -128,34 +130,38 @@ void CarregaRodaDireita()
 {
     glPushMatrix();
     glScaled(2, 2, 2);
-    glRotated(180, 0, 1, 0);
-    glTranslated(0, 0, transz);
+    //glRotated(180, 0, 1, 0);
+    glRotated(rotacao, 0, 1, 0);
+    glTranslated(-1.48226,0.86792,+3.1956);
+    //glTranslated(0, 0, transz);
     glRotated(giraRoda, 0, 1, 0);
 
 
+
+
     //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-   // glTranslatef(-movX, 0, -movZ);
+    // glTranslatef(-movX, 0, -movZ);
     //glRotated(angloDrone, 0, 1, 0);
 
-        glColor3f(0.5f, 0.5f, 0.5f);
+    glColor3f(0.5f, 0.5f, 0.5f);
 
-        for ( int j = 0; j < (rodadireita_tanque.faces).size(); ++j )
+    for ( int j = 0; j < (rodadireita_tanque.faces).size(); ++j )
+    {
+
+        glBegin ( GL_POLYGON );
+
+        for (int i = 0; i < (rodadireita_tanque.faces[j]).size() ; ++i )
         {
 
-            glBegin ( GL_POLYGON );
+            GLfloat normal[3] = {(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][0]),(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][1]),(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][2])};
+            glNormal3fv(normal);
+            GLfloat vert[3] = {(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][0]),(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][1]),(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][2])};
+            glVertex3fv (vert);
 
-            for (int i = 0; i < (rodadireita_tanque.faces[j]).size() ; ++i )
-            {
-
-                GLfloat normal[3] = {(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][0]),(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][1]),(rodadireita_tanque.normais[rodadireita_tanque.faces[j][i][2]][2])};
-                glNormal3fv(normal);
-                GLfloat vert[3] = {(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][0]),(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][1]),(rodadireita_tanque.vertices1[rodadireita_tanque.faces[j][i][0]][2])};
-                glVertex3fv (vert);
-
-            }
-
-            glEnd( );
         }
+
+        glEnd( );
+    }
 
     glPopMatrix();
 
@@ -167,13 +173,18 @@ void CarregaRodaEsquerda()
 {
     glPushMatrix();
     glScaled(2, 2, 2);
-    glRotated(180, 0, 1, 0);
-    glTranslated(0, 0, transz);
+    //glRotated(180, 0, 1, 0);
+    glRotated(rotacao, 0, 1, 0);
+    glTranslated(+1.50872,0.74939,+3.16875);
+    //glRotated(rotacao, 0, 1, 0);
+    //glTranslated(0, 0, transz);
     glRotated(giraRoda, 0, 1, 0);
 
 
+
+
     //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-   // glTranslatef(-movX, 0, -movZ);
+    // glTranslatef(-movX, 0, -movZ);
     //glRotated(angloDrone, 0, 1, 0);
 
     glDisable(GL_TEXTURE_2D);
@@ -194,7 +205,7 @@ void CarregaRodaEsquerda()
 
         glEnd( );
     }
-        glPopMatrix();
+    glPopMatrix();
 
 
     glutPostRedisplay();
@@ -205,35 +216,35 @@ void CarregaCanhao()
 {
     glPushMatrix();
     glScaled(2, 2, 2);
-    glRotated(180, 0, 1, 0);
-    glTranslated(0, 0, transz);
+    //glRotated(180, 0, 1, 0);
+    //glTranslated(0, 0, transz);
     glRotated(rotacao, 0, 1, 0);
 
     //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-   // glTranslatef(-movX, 0, -movZ);
+    // glTranslatef(-movX, 0, -movZ);
     //glRotated(angloDrone, 0, 1, 0);
 
     glDisable(GL_TEXTURE_2D);
 
-        glColor3f(0.5f, 0.5f, 0.5f);
+    glColor3f(0.5f, 0.5f, 0.5f);
 
-        for ( int j = 0; j < (canhao_tanque.faces).size(); ++j )
+    for ( int j = 0; j < (canhao_tanque.faces).size(); ++j )
+    {
+
+        glBegin ( GL_POLYGON );
+
+        for (int i = 0; i < (canhao_tanque.faces[j]).size() ; ++i )
         {
 
-            glBegin ( GL_POLYGON );
+            GLfloat normal[3] = {(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][0]),(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][1]),(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][2])};
+            glNormal3fv(normal);
+            GLfloat vert[3] = {(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][0]),(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][1]),(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][2])};
+            glVertex3fv (vert);
 
-            for (int i = 0; i < (canhao_tanque.faces[j]).size() ; ++i )
-            {
-
-                GLfloat normal[3] = {(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][0]),(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][1]),(canhao_tanque.normais[canhao_tanque.faces[j][i][2]][2])};
-                glNormal3fv(normal);
-                GLfloat vert[3] = {(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][0]),(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][1]),(canhao_tanque.vertices1[canhao_tanque.faces[j][i][0]][2])};
-                glVertex3fv (vert);
-
-            }
-
-            glEnd( );
         }
+
+        glEnd( );
+    }
     glPopMatrix();
 
 
@@ -245,37 +256,37 @@ void CarregaBaseCanhao()
 {
     glPushMatrix();
     glScaled(2, 2, 2);
-    glRotated(180, 0, 1, 0);
-    glTranslated(0, 0, transz);
+    //glRotated(180, 0, 1, 0);
+    //glTranslated(0, 0, transz);
 
     glRotated(rotacao, 0, 1, 0);
     //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-   // glTranslatef(-movX, 0, -movZ);
+    // glTranslatef(-movX, 0, -movZ);
     //glRotated(angloDrone, 0, 1, 0);
 
     glDisable(GL_TEXTURE_2D);
 
-        glColor3f(0.5f, 0.5f, 0.5f);
+    glColor3f(0.5f, 0.5f, 0.5f);
 
-        for ( int j = 0; j < (basecanhao_tanque.faces).size(); ++j )
+    for ( int j = 0; j < (basecanhao_tanque.faces).size(); ++j )
+    {
+
+        glBegin ( GL_POLYGON );
+
+        for (int i = 0; i < (basecanhao_tanque.faces[j]).size() ; ++i )
         {
 
-            glBegin ( GL_POLYGON );
+            GLfloat normal[3] = {(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][0]),(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][1]),(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][2])};
+            glNormal3fv(normal);
+            GLfloat vert[3] = {(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][0]),(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][1]),(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][2])};
+            glVertex3fv (vert);
 
-            for (int i = 0; i < (basecanhao_tanque.faces[j]).size() ; ++i )
-            {
-
-                GLfloat normal[3] = {(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][0]),(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][1]),(basecanhao_tanque.normais[basecanhao_tanque.faces[j][i][2]][2])};
-                glNormal3fv(normal);
-                GLfloat vert[3] = {(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][0]),(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][1]),(basecanhao_tanque.vertices1[basecanhao_tanque.faces[j][i][0]][2])};
-                glVertex3fv (vert);
-
-            }
-
-            glEnd( );
         }
 
-        glPopMatrix();
+        glEnd( );
+    }
+
+    glPopMatrix();
 
 
     glutPostRedisplay();
@@ -301,50 +312,50 @@ void Desenha(void)
     // Desenha um cubo
     glBegin(GL_POLYGON); // Face posterior
     glNormal3f(0,0,1); // Normal da face
-    glTexCoord2f(1.0/2 , 2.0/3);
+    glTexCoord2f(1.0/2, 2.0/3);
     glVertex3f(50.0, 50.0, 50.0);
-    glTexCoord2f(1.0/4 , 2.0/3);
+    glTexCoord2f(1.0/4, 2.0/3);
     glVertex3f(-50.0, 50.0, 50.0);
-    glTexCoord2f(1.0/4 , 1.0/3);
+    glTexCoord2f(1.0/4, 1.0/3);
     glVertex3f(-50.0, -50.0, 50.0);
-    glTexCoord2f(1.0/2 , 1.0/3);
+    glTexCoord2f(1.0/2, 1.0/3);
     glVertex3f(50.0, -50.0, 50.0);
     glEnd();
 
     glBegin(GL_POLYGON); // Face frontal
     glNormal3f(0,0,-1); // Normal da face
-    glTexCoord2f(3.0/4 , 2.0/3);
+    glTexCoord2f(3.0/4, 2.0/3);
     glVertex3f(50.0, 50.0, -50.0);
-    glTexCoord2f(3.0/4 , 1.0/3);
+    glTexCoord2f(3.0/4, 1.0/3);
     glVertex3f(50.0, -50.0, -50.0);
-    glTexCoord2f(1.0 , 1.0/3);
+    glTexCoord2f(1.0, 1.0/3);
     glVertex3f(-50.0, -50.0, -50.0);
-    glTexCoord2f(1.0 , 2.0/3);
+    glTexCoord2f(1.0, 2.0/3);
 
     glVertex3f(-50.0, 50.0, -50.0);
     glEnd();
 
     glBegin(GL_POLYGON);// Face lateral esquerda
     glNormal3f(-1,0,0); // Normal da face
-    glTexCoord2f(1.0/4 , 2.0/3);
+    glTexCoord2f(1.0/4, 2.0/3);
     glVertex3f(-50.0, 50.0, 50.0);
-    glTexCoord2f(0 , 2.0/3);
+    glTexCoord2f(0, 2.0/3);
     glVertex3f(-50.0, 50.0, -50.0);
-    glTexCoord2f(0 , 1.0/3);
+    glTexCoord2f(0, 1.0/3);
     glVertex3f(-50.0, -50.0, -50.0);
-    glTexCoord2f(1.0/4 , 1.0/3);
+    glTexCoord2f(1.0/4, 1.0/3);
     glVertex3f(-50.0, -50.0, 50.0);
     glEnd();
 
     glBegin(GL_POLYGON); // Face lateral direita
     glNormal3f(1,0,0); // Normal da face
-    glTexCoord2f(1.0/2 , 2.0/3);
+    glTexCoord2f(1.0/2, 2.0/3);
     glVertex3f(50.0, 50.0, 50.0);
-    glTexCoord2f(1.0/2 , 1.0/3);
+    glTexCoord2f(1.0/2, 1.0/3);
     glVertex3f(50.0, -50.0, 50.0);
-    glTexCoord2f(3.0/4 , 1.0/3);
+    glTexCoord2f(3.0/4, 1.0/3);
     glVertex3f(50.0, -50.0, -50.0);
-    glTexCoord2f(3.0/4 , 2.0/3);
+    glTexCoord2f(3.0/4, 2.0/3);
     glVertex3f(50.0, 50.0, -50.0);
     glEnd();
 
@@ -352,31 +363,34 @@ void Desenha(void)
 
     glBegin(GL_POLYGON); // Face superior
     glNormal3f(0,1,0); // Normal da face
-    glTexCoord2f(1.0/4 , 1.0);
+    glTexCoord2f(1.0/4, 1.0);
     glVertex3f(-50.0, 49.0, -50.0);
-    glTexCoord2f(1.0/4 , 2.0/3);
+    glTexCoord2f(1.0/4, 2.0/3);
     glVertex3f(-50.0, 49.0, 50.0);
-    glTexCoord2f(1.0/2 , 2.0/3);
+    glTexCoord2f(1.0/2, 2.0/3);
     glVertex3f(50.0, 49.0, 50.0);
-    glTexCoord2f(1.0/2 , 1.0);
+    glTexCoord2f(1.0/2, 1.0);
     glVertex3f(50.0, 49.0, -50.0);
     glEnd();
 
     //glBindTexture(GL_TEXTURE_2D, textura_id);
     glBegin(GL_POLYGON); // Face inferior
     glNormal3f(0,-1,0); // Normal da face
-    glTexCoord2f(1.0/4 ,0);
+    glTexCoord2f(1.0/4,0);
     glVertex3f(-50.0, 0, -50.0);
-    glTexCoord2f(1.0/2 , 0);
+    glTexCoord2f(1.0/2, 0);
     glVertex3f(50.0, 0, -50.0);
-    glTexCoord2f(1.0/2 , 1.0/3);
+    glTexCoord2f(1.0/2, 1.0/3);
     glVertex3f(50.0, 0, 50.0);
-    glTexCoord2f(1.0/4 , 1.0/3);
+    glTexCoord2f(1.0/4, 1.0/3);
     glVertex3f(-50.0, 0, 50.0);
     glEnd();
     glPopMatrix();
     // Execução dos comandos de desenho
 
+    glRotated(180, 0, 1, 0);
+    glRotated(transx, 0, 1, 0);
+    glTranslated(0, 0, transz);
     CarregaCorpo();
     CarregaRodaDireita();
     CarregaRodaEsquerda();
@@ -429,7 +443,7 @@ void Inicializa(void)
 
     try
     {
-        ifstream arq2("chao.bmp" ,ios::binary);
+        ifstream arq2("chao.bmp",ios::binary);
         char c;
         if(!arq2)
             cout << "Erro abriu";
@@ -562,42 +576,83 @@ void TeclasEspeciais (int tecla, int x, int y)
     switch (tecla)
     {
     case GLUT_KEY_LEFT:
-        {
-            giraRoda++;
-            break;
-        }
+    {
+        giraRoda++;
+        break;
+    }
 
     case GLUT_KEY_RIGHT:
-        {
-            giraRoda--;
-            break;
-        }
+    {
+        giraRoda--;
+        break;
+    }
 
     case GLUT_KEY_UP:
+    {
+
+        if(giraRoda > 0 )
         {
-            if(transz <= 60)
+            if(giraRoda != rotacao)
             {
-                transz++;
-                moverCameraz++;
+                transx++;
+                rotacao++ ;
+                giraRoda--;
             }
-            else
+        }
+        if(giraRoda < 0 )
+        {
+            if(giraRoda != rotacao)
             {
-                transz = transz;
-                moverCameraz = moverCameraz;
+                transx--;
+                rotacao-- ;
+                giraRoda++;
             }
-            break;
+
         }
 
-    case GLUT_KEY_DOWN:
+        if(transz <= 60)
         {
-            if(transz >= 0)
-            {
-                transz--;
-            }
-            else
-                transz = transz;
-            break;
+            transz++;
+            moverCameraz++;
         }
+        else
+        {
+            transz = transz;
+            moverCameraz = moverCameraz;
+        }
+        break;
+    }
+
+    case GLUT_KEY_DOWN:
+    {
+
+                if(giraRoda < 0 )
+        {
+            if(giraRoda != rotacao)
+            {
+                transx++;
+                rotacao++ ;
+                giraRoda--;
+            }
+        }
+        if(giraRoda > 0 )
+        {
+            if(giraRoda != rotacao)
+            {
+                transx--;
+                rotacao-- ;
+                giraRoda++;
+            }
+
+        }
+        if(transz >= 0)
+        {
+            transz--;
+        }
+        else
+            transz = transz;
+        break;
+    }
 
     case GLUT_KEY_HOME:
         obsZ++;
