@@ -90,7 +90,7 @@ GLfloat angle, fAspect, rotX, rotY, transy, transz, giraRoda, rotacao, moverCame
 GLfloat transx = 180;
 GLdouble obsX, obsY, obsZ;
 
-GLfloat offset[3] = {50, 60, 0};
+GLfloat offset[3] = {0, 5, 48};
 GLfloat objectPosition[3] = {movX, 0, movZ};
 GLfloat cameraPosition[3];
 
@@ -124,13 +124,13 @@ void CarregaCorpo()
     //glScaled(2, 2, 2);
     glRotated(rotacao, 0, 1, 0);
 
-<<<<<<< HEAD
-=======
-
-    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
-    // glTranslatef(-movX, 0, -movZ);
-    //glRotated(angloDrone, 0, 1, 0);
->>>>>>> 9cd2889f3c2b40a722d47686e6e43c4b3b1cb3d3
+//<<<<<<< HEAD
+//=======
+//
+//    //glTranslatef((-9.6) * movX, 0, (-9.6) * movZ);
+//    // glTranslatef(-movX, 0, -movZ);
+//    //glRotated(angloDrone, 0, 1, 0);
+//>>>>>>> 9cd2889f3c2b40a722d47686e6e43c4b3b1cb3d3
     glDisable(GL_TEXTURE_2D);
     for ( int j = 0; j < (corpo_tanque.faces).size(); ++j )
     {
@@ -379,6 +379,7 @@ void Trajetoria(void)
     while(tempo < 30);
     glEnd();
 }
+
 // Função callback chamada para fazer o desenho
 void Desenha(void)
 {
@@ -627,12 +628,19 @@ void PosicionaObservador(void)
     glLoadIdentity();
     // Especifica posição do observador e do alvo
 
+    cameraPosition[0] = objectPosition[0] + offset[0];
+    cameraPosition[1] = objectPosition[1] + offset[1];
+    cameraPosition[2] = objectPosition[2] + offset[2];
 
-    gluLookAt(0,0,48,0,15,0,0,1,0);
+    gluLookAt(cameraPosition[0], cameraPosition[1], cameraPosition[2], objectPosition[0], objectPosition[1], objectPosition[2], 0, 1, 0);
 
-    glTranslatef(0,0,obsZ);
-    glRotatef(rotX,1,0,0);
-    glRotatef(rotY,0,1,0);
+    //gluLookAt(0,20,transz,0,0,0,0,1,0);
+//    glTranslatef(0,-5,-5);
+//    glTranslatef(transx,0,transz-10);
+//    if(rotacao != 0)
+//        glRotatef(-rotacao-5,0,1,0);
+//    //glRotatef(rotY,0,1,0);
+
     DefineIluminacao();
 
     //printf("%f",rotX);
@@ -725,6 +733,7 @@ void TeclasEspeciais (int tecla, int x, int y)
                 rotacao-- ;
                 giraRoda++;
             }
+            objectPosition[2]++;
 
         }
 
@@ -854,7 +863,6 @@ void TeclasNormais (unsigned char key,int x, int y)
     PosicionaObservador();
     glutPostRedisplay();
 }
-
 
 void Timer(int value)
 {
